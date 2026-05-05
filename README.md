@@ -23,6 +23,41 @@ The platform demonstrates real-world **Site Reliability Engineering (SRE)** prin
 - Workflow-driven incident resolution
 
 ---
+## Quick Start
+
+### Step 1 — Clone
+```bash
+git clone https://github.com/pranjalpagaria/mission-critical-ims.git
+cd mission-critical-ims
+```
+
+### Step 2 — Start
+```bash
+docker-compose up --build -d
+```
+⚠️ First run takes 3-5 minutes (pulling images)
+Every run after that takes under a minute
+
+### Step 3 — Open Dashboard
+http://localhost:5173/
+
+### Step 4 — Populate with test data (new terminal)
+```bash
+npm install 
+node stress_test.js
+```
+## Now check dashboard data get populated
+### Step 6 — Stop
+```bash
+docker-compose down
+```
+## If Running on Cloud Instance (EC2 / GCP / Azure)
+
+### Step 1 — Open these ports in your firewall/security group
+Port 5173 — Frontend Dashboard
+Port 3000 — Backend API
+
+
 
 ## 📊 Assignment Requirement Checklist
 
