@@ -2,6 +2,9 @@
 
 High-Throughput SRE Observability & Incident Lifecycle Platform
 
+<img width="1623" height="969" alt="ChatGPT Image May 4, 2026, 02_01_51 PM" src="https://github.com/user-attachments/assets/1ebe4af8-1d49-467d-bf0d-2d03f07ee7c7" />
+
+
 ---
 
 ## 🚀 Overview
@@ -74,8 +77,6 @@ Port 3000 — Backend API
 ## 🏗️ System Architecture
 
 The architecture is designed to **decouple high-volume ingestion from transactional processing**, ensuring stability under heavy load.
-
-<img width="1623" height="969" alt="ChatGPT Image May 4, 2026, 02_01_51 PM" src="https://github.com/user-attachments/assets/03f055e7-72d5-44ef-ab00-a8258349d218" />
 
 ### 🔄 1. Signal Ingestion Layer
 
