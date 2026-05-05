@@ -1,0 +1,83 @@
+services:
+  ims_postgres:
+    image: postgres:15-alpine
+    container_name: ims_postgres
+    environment:
+      - POSTGRES_USER=sre_user
+      - POSTGRES_PASSWORD=sre_password
+      - POSTGRES_DB=ims_db
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sre_user -d ims_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    networks:
+      - ims_network
+
+  ims_redis:
+    image: redis/redis-stack-server:latest
+    container_name: ims_redis
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ims_network
+
+  ims_mongo:
+    image: mongo:latest
+    container_name: ims_mongo
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
+    networks:
+      - ims_network
+
+  ims_backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ims_backend
+    restart: on-failure
+    environment:
+      - DATABASE_URL=postgresql://sre_user:sre_password@ims_postgres:5432/ims_db
+      - MONGO_URI=mongodb://ims_mongo:27017/ims_audit_lake
+      - REDIS_URL=redis://ims_redis:6379
+    ports:
+      - "3000:3000"
+    depends_on:
+      ims_postgres:
+        condition: service_healthy
+      ims_mongo:
+        condition: service_healthy
+      ims_redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - ims_network
+
+  ims_frontend:
+    build: ./frontend
+    container_name: ims_frontend
+    restart: on-failure
+    ports:
+      - "5173:5173"
+    depends_on:
+      ims_backend:
+        condition: service_healthy
+    networks:
+      - ims_network
+
+networks:
+  ims_network:
+    driver: bridge
