@@ -50,13 +50,13 @@ npm install
 node stress_test.js
 ```
 ## Now check dashboard data get populated
-### Step 6 — Stop
+### Step 5 — Stop
 ```bash
 docker-compose down
 ```
 ## If Running on Cloud Instance (EC2 / GCP / Azure)
 
-### Step 1 — Open these ports in your firewall/security group
+### Open these ports in your firewall/security group
 Port 5173 — Frontend Dashboard
 Port 3000 — Backend API
 
